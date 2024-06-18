@@ -41,4 +41,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function tutor(){
+        return $this->hasOne(Tutor::class, 'id_tutor_padre', 'id_tutor');
+    }
 }

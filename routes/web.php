@@ -2,13 +2,17 @@
 
 use App\Models\User;
 use App\Models\Grado;
+use App\Models\Grupo;
 use App\Models\Tutor;
 use App\Models\Alumno;
 use App\Models\Destino;
 use App\Models\Aspirante;
 use App\Models\DetalleGradoGrupo;
+// use Illuminate\Http\Client\Request;
+use App\Models\DetalleAspiranteTutor;
+use App\Models\Eventos;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,7 +71,7 @@ Route::get('/prueba', function(){
 
     // $alumnos = Alumno::select('id_alumnos')
     // ->where('alumnos.activo',1)
-    // ->where('alumnos.id_plantel',1)
+    // ->where('alumnos.id_  plantel',1)
     // ->addSelect([
     //     'nombre_general' => Aspirante::select('nombre_general')
     //         ->whereColumn('aspirantes.id_aspirante', 'alumnos.id_aspirante')
@@ -97,6 +101,100 @@ Route::get('/prueba', function(){
     // Suma y Count
     $usuarios = User::where('activo',1)->count();
     $usuarios = User::where('activo',1)->sum('activo');
+
+
+    // Borrar uno o varios elementos
+    // $usuarios = User::destroy([1,2,3]);
+    // return 'Eliminados correctamente';
     
+
+    // Trunquear la tabla
+    // $usuarios = User::truncate();
     return $usuarios;
+});
+
+
+Route::get('/tablas', function(){
+    $tutor = User::findOrFail(248);
+    return $tutor->tutor;
+});
+Route::get('/aspirante', function(){
+    $aspirante = Aspirante::findOrFail(1);
+    return $aspirante;
+});
+
+Route::get('/hijos_tutor', function(){
+    $tutor = Tutor::findOrFail(1);
+    return $tutor->hijos;
+});
+Route::get('/tutor_hijo', function(){
+    $padre = DetalleAspiranteTutor::findOrFail(1);
+    return $padre;
+});
+
+
+/**Metodo fill */
+Route::get('/updateTutor', function(){
+    
+    $tutor = Tutor::findOrFail(1);
+    $data = [
+        'nombre_tutor' => "Juan CHAYANNE SILVERIO NERI"
+    ];
+
+    $tutor->fill($data);
+    $tutor->save();
+});
+
+Route::get('/usuario', function(){
+    $tutor = Tutor::find(1);
+    return $tutor->usuario;
+});
+
+// Route::get('grado',function(){
+//     $grupo = Grupo::findOrFail(1);
+//     $grados = $grupo->grados;
+
+//     foreach ($grados as $grado) {
+//         echo "Nombre del grado: " . $grado->nombre . "<br>";
+//         echo "Nombre del grupo: " . $grado->grupo->nombre . "<br>";
+//     }
+//     // return $grupo->grados; 
+// });
+
+Route::get('coleccion', function(){
+    $arreglo = ['Daniel', 'Pedro'];
+    $collection = collect($arreglo);
+
+    $mapeada = $collection->map(fn($elemento)=> strtoupper($elemento));
+    // dd($mapeada);
+
+    foreach ($arreglo as $elemento){
+        var_dump(strtoupper($elemento));
+    }
+});
+
+Route::get('test-response-time', function (Request $request) {
+    $start = microtime(true);
+
+    $arreglo = ['Daniel', 'Pedro'];
+    $collection = collect($arreglo);
+
+    $mapeada = $collection->map(fn($elemento)=> strtoupper($elemento));
+    var_dump($mapeada);
+
+    $end = microtime(true);
+    $duration = $end - $start;
+    
+    return 'La duración de la respuesta es: ' . $duration . ' segundos';
+});
+
+Route::get('/todos', function(){
+    $usuarios = User::all();
+    $datos = $usuarios->all();
+    dd( $datos);
+});
+
+Route::get('/alumno', function(){
+    $alumno = Alumno::find(30);
+    return $alumno->plantel;
 });

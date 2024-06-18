@@ -11,4 +11,13 @@ class Aspirante extends Model
     protected $table = 'aspirantes';
     protected $primaryKey = 'id_aspirante';
 
+      public function setKeyName($key)
+    {
+        return 'id_aspirante';
+    }
+
+    public function alumno(){
+      return $this->belongsTo(Alumno::class, 'id_aspirante', 'id_aspirante');
+    }
+
 }
